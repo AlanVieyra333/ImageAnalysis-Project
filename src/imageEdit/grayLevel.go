@@ -5,7 +5,7 @@ import (
 	"image/color"
 )
 
-func NG(inImg image.Image) image.Image {
+func NG(inImg image.Image, channel uint8) image.Image {
 	outImg := image.NewRGBA64(image.Rect(0, 0, inImg.Bounds().Max.X, inImg.Bounds().Max.Y))
 
 	for x := 0; x < inImg.Bounds().Max.X; x++ {
@@ -15,7 +15,18 @@ func NG(inImg image.Image) image.Image {
 
 			grayColor := uint16(GetGrayWeighted(r, g, b))
 
-			newColor := color.RGBA64{grayColor, grayColor, grayColor, uint16(a)}
+			var newColor color.Color
+			switch channel {
+			case 1:
+				newColor = color.RGBA64{grayColor, uint16(0), uint16(0), uint16(a)}
+			case 2:
+				newColor = color.RGBA64{uint16(0), grayColor, uint16(0), uint16(a)}
+			case 3:
+				newColor = color.RGBA64{uint16(0), uint16(0), grayColor, uint16(a)}
+			default:
+				newColor = color.RGBA64{grayColor, grayColor, grayColor, uint16(a)}
+			}
+
 			outImg.Set(x, y, newColor)
 		}
 	}

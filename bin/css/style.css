@@ -1013,7 +1013,7 @@ a:hover {
 	border: 1px solid #000;
 	margin: 10px 10px 10px 10px;
 }
-#fileSelect{
+.fileSelectHidden{
 	display : none;
 }
 /*	----------------------------	Pop pup ------------------------------	*/

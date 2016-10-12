@@ -43,19 +43,23 @@ function sendAjaxJSON(data, ok){
 }
   
 function editImage() {	
-alert(this.id);
     var ID;
 	if( this.id == "send" ){
-		ID = parseInt(document.getElementById('op').value);	
+		ID = parseInt(document.getElementById('op').value);		
 	}else{
 		ID = parseInt(""+this.id);
 	}
-	//alert(ID);
 	
 	closePopup();
 	
-	if(  this.id != "send" && ID == 1 || ID == 2){
+	if(  this.id != "send" && (ID == 1 || ID == 2 || ID == 9 || ID == 10) ){ // Get value.
 		showPopup(ID);
+	}else if(ID >= 5 && ID <= 8 ){ // Get other image.
+		$('#imageMask').attr('valueOp',ID);
+		$('#imageMask').removeAttr('value');
+		$('#imageMask').attr('value','');
+		$('#imageMask').show();
+		document.getElementById('imageMask').click();
 	}else{		
 		/*	----------------	Send data	-----------------	*/
 		var fileName = document.getElementById('imageEdit').title;
@@ -75,8 +79,13 @@ alert(this.id);
 		};
 		
 		if(this.id == "send"){
-//			alert(document.getElementById('args').value);
-			infoJSON.Args = "" + document.getElementById('args').value + ";";
+			if(ID == 9){
+				infoJSON.Args = "" + $( "#args" ).val() + ";" + $('input:radio[name=args2]:checked').val() + ";";
+			}else if(ID == 10){
+				infoJSON.Args = "" + $('input:radio[name=args]:checked').val() + ";";
+			}else{
+				infoJSON.Args = "" + $( "#args" ).val() + ";";
+			}
 		}
 		
 		var data = JSON.stringify(infoJSON);
@@ -85,7 +94,6 @@ alert(this.id);
 			$('#imageEdit').attr('src','uploaded/' + res.FileNameEdit);
 			$('#imageEdit').show();
 		};
-//		alert("sendeeee");
 
 		sendAjaxJSON(data, ok);
 	}

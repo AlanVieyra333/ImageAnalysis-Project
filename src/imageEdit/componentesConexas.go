@@ -8,7 +8,7 @@ import (
 
 func CompConex(inImg image.Image, conect int64) image.Image {
 	//	fmt.Printf("conect: %d\n", conect)
-	binImg := Binarizing(inImg, uint16(0x7FFF))
+	binImg := Binarizing(inImg, uint16(0x7FFF), uint8(0))
 	outImg := image.NewRGBA64(image.Rect(0, 0, inImg.Bounds().Max.X, inImg.Bounds().Max.Y))
 
 	xm := binImg.Bounds().Max.X

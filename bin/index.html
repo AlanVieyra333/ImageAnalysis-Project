@@ -205,7 +205,8 @@
                                     <center><input type="file" id="files" name="files[]"/></center>
                                     </p>
                                 </div>
-                                <div id="fileSelect"></div>
+                                <div class="fileSelectHidden" id="fileSelect"></div>
+								<div class="fileSelectHidden" id="imageMaskSelect"> <input type="file" id="imageMask" name="files[]" valueOp=0/></div>
                             </div>
                         </div>
                     </div>
@@ -411,9 +412,11 @@
 <div class="my-overlay-container">
 	<div class="my-window-container my-zoomin">
 		<h3>Parámetros</h3> 
-		<p id="label-args">(Texto)</p>
-		<input type="hidden" id="op" value="0">
-		<input type="text" id="args" name="firstname">
+		<input type="hidden" id="op" value="0">		
+		<p id="label-args">(Texto)</p>		
+		
+		<div id="param"></div>		
+		
 		<br/>
 		<br/>
 		<span class="my-close" id="close">Cerrar</span>
@@ -509,6 +512,8 @@
 <script>
 
     document.getElementById('files').addEventListener('change', handleFileSelect, false);
+	document.getElementById('imageMask').addEventListener('change', handleFileSelect, false);
+	
     var dropZone = document.getElementById('anImage');
     dropZone.addEventListener('dragover', handleDragOver, false);
     dropZone.addEventListener('drop', handleFileSelectDrop, false);
@@ -527,6 +532,7 @@
 			$('#close').click();
 		}
 	});
+	
 	
 </script>
 

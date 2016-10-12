@@ -98,8 +98,8 @@ func And(inImg image.Image, mask image.Image) image.Image {
 	xm2 := mask.Bounds().Max.X
 	ym2 := mask.Bounds().Max.Y
 
-	inImgNG := NG(inImg)
-	maskNG := NG(mask)
+	inImgNG := NG(inImg, uint8(0))
+	maskNG := NG(mask, uint8(0))
 
 	for x := 0; x < xm; x++ {
 		for y := 0; y < ym; y++ {
@@ -133,8 +133,8 @@ func Or(inImg image.Image, mask image.Image) image.Image {
 	xm2 := mask.Bounds().Max.X
 	ym2 := mask.Bounds().Max.Y
 
-	inImgNG := NG(inImg)
-	maskNG := NG(mask)
+	inImgNG := NG(inImg, uint8(0))
+	maskNG := NG(mask, uint8(0))
 
 	for x := 0; x < xm; x++ {
 		for y := 0; y < ym; y++ {
