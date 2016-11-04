@@ -9,10 +9,12 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"html/template"
 	"imageEdit"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"net/http"
 	"os"
@@ -24,7 +26,7 @@ type Page struct {
 	Body  []byte
 }
 
-var templates = template.Must(template.ParseFiles("index.html"))
+//var templates = template.Must(template.ParseFiles("index.html"))
 
 //var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
 var validPath = regexp.MustCompile("^/(upload|json)*(/([a-zA-Z0-9]*))?$")
@@ -37,6 +39,7 @@ func (p *Page) save() error {
 	return ioutil.WriteFile(filename, p.Body, 0600)
 }
 
+/*/	---
 func loadPage(title string) (*Page, error) {
 	filename := title + ".txt"
 	body, err := ioutil.ReadFile(filename)
@@ -44,14 +47,14 @@ func loadPage(title string) (*Page, error) {
 		return nil, err
 	}
 	return &Page{Title: title, Body: body}, nil
-}
+}//*/
 
-func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-	err := templates.ExecuteTemplate(w, tmpl+".html", p)
+/*func renderTemplate(w http.ResponseWriter, title string) {
+	err := templates.ExecuteTemplate(w, title+".html", nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-}
+}//*/
 
 /*	--------------------------->	Handlers	--------------------------->	*/
 
@@ -68,13 +71,16 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request, title string) {
-	//fmt.Println(title);
+	/*/fmt.Println(title);
 	p, err := loadPage("index")
 	if err != nil {
 		http.NotFound(w, r)
 		return
-	}
-	renderTemplate(w, title, p)
+	}*/
+	//renderTemplate(w, title)
+	indexTmpl := template.New("index.html").Delims("<<", ">>")
+	indexTmpl, _ = indexTmpl.ParseFiles("index.html")
+	indexTmpl.Execute(w, nil)
 }
 
 /*	------------------------->	Functions operate files	------------------------->	*/
@@ -249,7 +255,11 @@ func main() {
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("./js/"))))
 	http.Handle("/uploaded/", http.StripPrefix("/uploaded/", http.FileServer(http.Dir("./uploaded/"))))
 
-	fmt.Println("Server ON localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	port := flag.Int("port", 80, "port to serve on")
+	log.Printf("Servidor listo en: localhost:%d\n", *port)
+	addr := fmt.Sprintf("localhost:%d", *port)
+
+	err = http.ListenAndServe(addr, nil)
+	fmt.Println(err.Error())
 
 }
