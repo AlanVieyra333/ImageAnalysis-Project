@@ -255,9 +255,10 @@ func main() {
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("./js/"))))
 	http.Handle("/uploaded/", http.StripPrefix("/uploaded/", http.FileServer(http.Dir("./uploaded/"))))
 
-	port := flag.Int("port", 80, "port to serve on")
-	log.Printf("Servidor listo en: localhost:%d\n", *port)
+	port := flag.Int("port", 8080, "port to serve on")
 	addr := fmt.Sprintf("localhost:%d", *port)
+
+	log.Printf("Servidor listo en: %s\n", addr)
 
 	err = http.ListenAndServe(addr, nil)
 	fmt.Println(err.Error())
