@@ -256,8 +256,7 @@ func main() {
 	http.Handle("/uploaded/", http.StripPrefix("/uploaded/", http.FileServer(http.Dir("./uploaded/"))))
 
 	port := flag.Int("port", 8080, "port to serve on")
-	addr := fmt.Sprintf("localhost:%d", *port)
-
+	addr := fmt.Sprintf("0.0.0.0:%d", *port)
 	log.Printf("Servidor listo en: %s\n", addr)
 
 	err = http.ListenAndServe(addr, nil)
