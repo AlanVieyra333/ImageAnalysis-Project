@@ -1,24 +1,27 @@
 /**
  * Created by Fenix on 03/10/2016.
 set GOPATH=%cd%
-go build imageEdit
+go build editImage
 go install server
 */
 
 package main
 
 import (
+	"editImage"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"html/template"
-	"imageEdit"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"net/http"
 	"os"
 	"regexp"
+	"server"
+	"strconv"
+	"strings"
+	"tools"
 )
 
 type Page struct {
@@ -58,7 +61,7 @@ func loadPage(title string) (*Page, error) {
 
 /*	--------------------------->	Handlers	--------------------------->	*/
 
-func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
+func makeHandler(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		m := validPath.FindStringSubmatch(r.URL.Path)
 		if m == nil {
@@ -66,11 +69,32 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 			return
 		}
 		//fmt.Println("" + m[0] + " " + m[1] + " " + m[2]);
-		fn(w, r, "index")
+		fn(w, r)
 	}
 }
 
-func homeHandler(w http.ResponseWriter, r *http.Request, title string) {
+func exists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return true, err
+}
+
+func newID() string {
+	id := tools.GetRandInteger(10)
+	//fmt.Printf("id:%s\n", id)
+	for exist, _ := exists("./uploaded/" + id + "/"); exist; exist, _ = exists("./uploaded/" + id) {
+		id = tools.GetRandInteger(10)
+	}
+	os.Mkdir("./uploaded/"+id+"/", 0777)
+	return id
+}
+
+func homeHandler(w http.ResponseWriter, r *http.Request) {
 	/*/fmt.Println(title);
 	p, err := loadPage("index")
 	if err != nil {
@@ -78,6 +102,14 @@ func homeHandler(w http.ResponseWriter, r *http.Request, title string) {
 		return
 	}*/
 	//renderTemplate(w, title)
+
+	/*	----	Cookie	---	*/
+	if len(r.Cookies()) == 0 { //	Create new cookie
+		// Value = [IDClient],[currentOperation]
+		cookie := http.Cookie{Name: "imageAnalysis", Value: newID() + ",0", Path: "/", HttpOnly: false}
+		http.SetCookie(w, &cookie)
+	}
+
 	indexTmpl := template.New("index.html").Delims("<<", ">>")
 	indexTmpl, _ = indexTmpl.ParseFiles("index.html")
 	indexTmpl.Execute(w, nil)
@@ -90,27 +122,27 @@ type Status struct {
 	Message      string
 	FileName     string
 	FileNameEdit string
+	Data         editImage.DataOutJSON
 }
 
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-func RandStringBytes(n int) string {
-	b := make([]byte, n)
-	for i := range b {
-		b[i] = letterBytes[rand.Intn(len(letterBytes))]
-	}
-	return string(b)
-}
-
-func uploadHandler(w http.ResponseWriter, req *http.Request, title string) {
+func uploadHandler(w http.ResponseWriter, req *http.Request) {
 	//	fmt.Println("Upl")
+	//fmt.Println(req.Header)
+	cookiePrin, err := req.Cookie("imageAnalysis")
+	if err != nil {
+		http.Redirect(w, req, "/", http.StatusFound)
+		return
+	}
+	vals := strings.Split(cookiePrin.Value, ",")
+	ID := vals[0]
+
 	confirm := &Status{
 		Code:         1,
 		Message:      "Archivo subido exitosamente.",
 		FileName:     "",
 		FileNameEdit: "",
 	}
-
+	isNewImage := req.FormValue("type")
 	file, handler, err := req.FormFile("file")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -119,7 +151,7 @@ func uploadHandler(w http.ResponseWriter, req *http.Request, title string) {
 	}
 	//	fmt.Println("file: " + confirm.Message);
 	confirm.FileName = handler.Filename
-	confirm.FileNameEdit = RandStringBytes(10)
+	confirm.FileNameEdit = tools.GetRandString(10)
 
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
@@ -129,47 +161,56 @@ func uploadHandler(w http.ResponseWriter, req *http.Request, title string) {
 	}
 	//	fmt.Println("data: " + confirm.Message);
 
+	//	New Image.
+	if isNewImage == "0" {
+		tools.RemovePath("./uploaded/" + ID)
+		/*	----	Cookie	---	*/
+		name := cookiePrin.Name
+		value := ID + ",1"
+		cookie := http.Cookie{Name: name, Value: value, Path: "/", HttpOnly: false}
+		http.SetCookie(w, &cookie)
+
+		name = string("op1")
+		value = confirm.FileNameEdit
+		cookie = http.Cookie{Name: name, Value: value, Path: "/", HttpOnly: true}
+		http.SetCookie(w, &cookie)
+	}
 	/*	--------------------	Create folder and files	--------------------	*/
-	err = ioutil.WriteFile("./uploaded/"+confirm.FileName, data, 0777)
+	err = ioutil.WriteFile("./uploaded/"+ID+"/"+confirm.FileNameEdit, data, 0777)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		confirm.Code = 2
 		confirm.Message = err.Error()
 	}
-
-	err = ioutil.WriteFile("./uploaded/"+confirm.FileNameEdit, data, 0777)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		confirm.Code = 2
-		confirm.Message = err.Error()
-	}
-
 	/*	--------------------	Create folder and files	--------------------	*/
+
+	/*	----	JSON	---	*/
 	b, err := json.Marshal(confirm)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	w.Header().Set("Content-Type", "application/json")
-	//w.WriteHeader(http.StatusOK)
-	//json.NewEncoder(w).Encode(confirm)
 	w.Write(b)
 }
 
-func jsonHandler(w http.ResponseWriter, req *http.Request, title string) {
-	//	fmt.Println("json")
-	//	fmt.Println(req.Header.Get)
-	//	fmt.Println(req.ContentLength)
-	//	fmt.Println(req.Method)
-	//	fmt.Println(req.Form)
+func jsonHandler(w http.ResponseWriter, req *http.Request) {
+	//fmt.Println(req.Header)
+	cookiePrin, err := req.Cookie("imageAnalysis")
+	if err != nil {
+		http.Redirect(w, req, "/", http.StatusFound)
+		return
+	}
+	vals := strings.Split(cookiePrin.Value, ",")
+	ID := vals[0]
+
 	confirm := &Status{
 		Code:         1,
 		Message:      "Archivo editado exitosamente.",
 		FileName:     "",
 		FileNameEdit: "",
 	}
-	var data imageEdit.InfoJSON
+	var data editImage.InfoJSON
 
 	if req.Body == nil {
 		confirm.Code = 2
@@ -185,29 +226,62 @@ func jsonHandler(w http.ResponseWriter, req *http.Request, title string) {
 			if err != nil {
 				confirm.Code = 2
 				confirm.Message = err.Error()
+			} else if data.Operation == -1 { // Cookie
+				args := strings.Split(data.Args, ";")
+				aux, err := strconv.ParseInt(args[0], 10, 64)
+
+				if err != nil {
+					confirm.Code = 2
+					confirm.Message = err.Error()
+				} else {
+					confirm.FileName = data.FileName
+					confirm.FileNameEdit = data.FileNameEdit
+					var nothing editImage.DataOutJSON
+					confirm.Data = nothing
+
+					cookieOp, err := req.Cookie("op1")
+					var paths []string
+					var op int64
+					if err != nil {
+						confirm.Code = 2
+						confirm.Message = "Invalid cookie."
+					} else {
+						paths = strings.Split(cookieOp.Value, ",")
+						op, _ = strconv.ParseInt(vals[1], 10, 32)
+					}
+
+					switch aux {
+					case 1: //	Undo.
+						if server.Undo(w, req) {
+							op--
+							confirm.FileNameEdit = paths[int(op-1)]
+						}
+					case 2: //	Redo.
+						if server.Redo(w, req) {
+							op++
+							confirm.FileNameEdit = paths[int(op-1)]
+						}
+					default:
+						confirm.Code = 2
+						confirm.Message = "Invalid option."
+					}
+				}
 			} else {
 				//				m := validPathImage.FindStringSubmatch(data.FileName)
 				/*	--------------------------	Edit Image	------------------------------	*/
-				//				fmt.Println(data.Operation)
-				//				fmt.Println(data.FileName)
-				//				fmt.Println(data.FileNameEdit)
-				//				fmt.Println(data.Args)
 
-				newFile := RandStringBytes(10)
-				err = imageEdit.Edit(data, newFile, "./uploaded/")
+				newFile := tools.GetRandString(10)
+				dataJSON, err := editImage.Edit(data, newFile, "./uploaded/"+ID+"/")
 				//				fmt.Println(newFile)
 				if err != nil {
 					confirm.Code = 2
 					confirm.Message = err.Error()
 				} else {
-					err = os.Remove("./uploaded/" + data.FileNameEdit)
-					if err != nil {
-						fmt.Println(err)
-						//return
-					}
-
 					confirm.FileName = data.FileName
 					confirm.FileNameEdit = newFile
+					confirm.Data = dataJSON
+
+					server.SendCookie(w, req, newFile)
 				}
 			}
 		}
@@ -222,28 +296,11 @@ func jsonHandler(w http.ResponseWriter, req *http.Request, title string) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(b)
-	//fmt.Fprintf(w, string(b))
-	//fmt.Println("Sending: ............................." + string(b));
 }
 
 /*	--------------------------->	Main	--------------------------->	*/
-
 func main() {
-	err := os.RemoveAll("./uploaded")
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		err = os.Mkdir("./uploaded", 0600)
-		if err != nil {
-			err = os.Mkdir("./uploaded", 0777)
-			if err != nil {
-				err = os.Mkdir("./uploaded", 0600)
-				if err != nil {
-					fmt.Println(err)
-				}
-			}
-		}
-	}
+	tools.RemovePath("./uploaded")
 
 	http.HandleFunc("/", makeHandler(homeHandler))
 	http.HandleFunc("/upload/", makeHandler(uploadHandler))
@@ -259,7 +316,7 @@ func main() {
 	addr := fmt.Sprintf("0.0.0.0:%d", *port)
 	log.Printf("Servidor listo en: %s\n", addr)
 
-	err = http.ListenAndServe(addr, nil)
+	err := http.ListenAndServe(addr, nil)
 	fmt.Println(err.Error())
 
 }

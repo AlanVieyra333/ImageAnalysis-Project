@@ -47,6 +47,22 @@ a:hover {
 	position : absolute;
 	top : 48%;
 }
+#wait .logo {
+	position : absolute;
+	left : 50%;
+	top : 50%;
+	width : 150px;
+	height : 50px;
+	margin : -25px 0 0 -75px;
+	
+	font-family : "Comic Sans MS";
+	font-size : 20px;
+	font-weight: bold;
+	text-align: center;
+	text-transform : capitalize;
+	color : #3498db;
+}
+
 #loader-wrapper .logo a {
 	font-weight : 700;
 	color : #3498DB;
@@ -73,9 +89,10 @@ a:hover {
 	height : 150px;
 	margin : -75px 0 0 -75px;
 	border-radius : 50%;
-	border : transparent solid 3px;
+	border : transparent solid 4px;
 	border-top-color : #3498db;
 	animation : spin 2s linear infinite;
+	background-color: #f2f2f2;
 }
 #loader:before {
 	content : "";
@@ -85,7 +102,7 @@ a:hover {
 	right : 5px;
 	bottom : 5px;
 	border-radius : 50%;
-	border : transparent solid 3px;
+	border : transparent solid 4px;
 	border-top-color : #444;
 	animation : spin 3s linear infinite;
 }
@@ -97,7 +114,7 @@ a:hover {
 	right : 15px;
 	bottom : 15px;
 	border-radius : 50%;
-	border : transparent solid 3px;
+	border : transparent solid 4px;
 	border-top-color : #1487b2;
 	animation : spin 1.5s linear infinite;
 }
@@ -1009,7 +1026,7 @@ a:hover {
 .thumb {
 	height: 480px;
 	max-height: 480px;
-	max-width: 1000px;
+	max-width: 1170px;
 	border: 1px solid #000;
 	margin: 10px 10px 10px 10px;
 }
@@ -1104,4 +1121,72 @@ input[type=text], select {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+}
+
+input[type=number], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input:invalid {
+    border-color: red;
+}
+
+input:valid {
+    border-color: green;
+}
+
+#wait{
+		
+	display: none;
+	content: " ";
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	left: 0;
+	top: 0;
+	background: -moz-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%, rgba(127,127,127,0.9) 100%);
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(127,127,127,0)), color-stop(100%,rgba(127,127,127,0.9)));
+	background: -webkit-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%,rgba(127,127,127,0.9) 100%);
+	background: -o-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%,rgba(127,127,127,0.9) 100%);
+	background: -ms-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%,rgba(127,127,127,0.9) 100%);
+	background: radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%,rgba(127,127,127,0.9) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#007f7f7f', endColorstr='#e67f7f7f',GradientType=1 );
+	z-index: 1032;
+}
+
+#anImage{
+	position:relative;
+}
+
+#chart_div{
+	display: none;
+	vertical-align: middle;
+	margin: auto;
+	position: absolute;
+	border-radius: 10px;
+	border: 2px solid #000;
+	margin: -490px auto 10px auto;
+	width: 1170px;
+	opacity: 0.95;
+}
+
+.info{
+	display: none;
+	vertical-align: middle;
+	position: absolute;
+	right: 0px;
+	border-radius: 30px;
+	border: 2px solid #000;	
+	width: 200px;
+	height: 480px;
+	background: #f2f2f2;
+	opacity: 0.95;
+	margin: -490px -30px 10px auto;
+	text-align: left;
 }

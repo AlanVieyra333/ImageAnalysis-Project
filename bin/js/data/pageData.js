@@ -32,17 +32,17 @@ myApp.controller('OptionsController', ['$scope', function($scope) {
 							]},
 		{name:"Filtros", items:[
 								{name:"Pasa Altas", items:[
-														{name:"L", items:""},
-														{name:"R", items:""},
-														{name:"P", items:""},
-														{name:"S", items:""}
+														{name:"Laplaciano", items:""},
+														{name:"Robert", items:""},
+														{name:"Prewitt", items:""},
+														{name:"Sobel", items:""}
 														]},
 								{name:"Pasa Bajas", items:[
 														{name:"Promedio", items:""},
 														{name:"Promedio Pesado", items:""}
 														]},
 								{name:"Mediana", items:""},
-								{name:"Media", items:""},
+								{name:"Moda", items:""},
 								{name:"Max", items:""},
 								{name:"Min", items:""}
 							]},

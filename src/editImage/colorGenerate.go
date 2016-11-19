@@ -1,4 +1,4 @@
-package imageEdit
+package editImage
 
 import (
 	//	"fmt"

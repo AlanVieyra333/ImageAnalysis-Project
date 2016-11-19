@@ -48,6 +48,16 @@
     </div>
 </div>
 <!-- end preloader -->
+
+<div id="wait">
+	<div id="loader">
+		<!-- img src='./img/wait.gif' width="150" height="150"  /-->		
+	</div>
+	<div class="logo">
+		Caragando
+	</div>	
+</div>
+
 <!--[if lt IE 8]>
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
     your browser</a> to improve your experience.</p>
@@ -77,7 +87,7 @@
 									<li><a href="#">Archivo<i class="fa fa-angle-down"></i></a>
                                         <ul>
                                             <li><a href="#" id="open">Abrir</a></li>
-                                            <li><a href="#" id="save">Guardar</a></li>
+                                            <li><a href="#" id="save" href="./uploaded/" download="Imagen">Guardar</a></li>
                                             <li><a href="#" id="undo">Deshacer</a></li>
                                             <li><a href="#" id="redo">Rehacer</a></li>
                                         </ul>
@@ -98,100 +108,6 @@
 											</li>
                                         </ul>
                                     </li>
-									<!--
-                                    <li><a href="#">Archivo<i class="fa fa-angle-down"></i></a>
-                                        <ul>
-                                            <li><a href="#" id="open">Abrir</a></li>
-                                            <li><a href="#" id="save">Guardar</a></li>
-                                            <li><a href="#" id="undo">Deshacer</a></li>
-                                            <li><a href="#" id="redo">Rehacer</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li><a href="#">Sección 1<i class="fa fa-angle-down"></i></a>
-                                        <ul>
-                                            <li><a href="#" class="menuSelect" id="1">Etiquetado por componentes conexas</a></li>
-                                            <li><a href="#" class="menuSelect" id="2">Binarizar</a></li>
-                                            <li><a href="#" class="menuSelect" id="3">N. G.</a></li>
-                                            <li><a href="#" class="menuSelect" id="4">Neggativo</a></li>
-                                            <li><a href="#" class="menuSelect" id="5">Suma</a></li>
-                                            <li><a href="#" class="menuSelect" id="6">Resta</a></li>
-                                            <li><a href="#" class="menuSelect" id="7">And</a></li>
-                                            <li><a href="#" class="menuSelect" id="8">Or</a></li>
-                                            <li><a href="#" class="menuSelect" id="9">Binarizacion por canal</a></li>
-                                            <li><a href="#" class="menuSelect" id="10">N. G. por canal</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li><a href="#">Sección 2<i class="fa fa-angle-down"></i></a>
-                                        <ul>
-                                            <li><a href="#" class="menuSelect" id="11">Mejora del contraste</a></li>
-                                            <li><a href="#" class="menuSelect" id="12">Histograma</a></li>
-                                            <li><a href="#" class="menuSelect" id="13">Propiedades del Histograma</a></li>
-                                            <li><a href="#" class="menuSelect" id="14">Desplazamiento</a></li>
-                                            <li><a href="#" class="menuSelect" id="15">Ensanchamiento</a></li>
-                                            <li><a href="#" class="menuSelect" id="16">Estiramiento</a></li>
-                                            <li><a href="#" class="menuSelect" id="17">Ecualización</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li><a href="#">Filtros<i class="fa fa-angle-down"></i></a>
-                                        <ul>
-                                            <li><a href="#">Pasa altas</a>
-                                                <ul>
-                                                    <li><a href="#" class="menuSelect" id="18">L</a></li>
-                                                    <li><a href="#" class="menuSelect" id="19">R</a></li>
-                                                    <li><a href="#" class="menuSelect" id="20">P</a></li>
-                                                    <li><a href="#" class="menuSelect" id="21">S</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="#">Pasa bajas</a>
-                                                <ul>
-                                                    <li><a href="#" class="menuSelect" id="22">Promedio</a></li>
-                                                    <li><a href="#" class="menuSelect" id="23">Promedio pesado</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="#" class="menuSelect" id="24">Mediana</a></li>
-                                            <li><a href="#" class="menuSelect" id="25">Media</a></li>
-                                            <li><a href="#" class="menuSelect" id="26">Max</a></li>
-                                            <li><a href="#" class="menuSelect" id="27">Min</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li><a href="#">Segmentación<i class="fa fa-angle-down"></i></a>
-                                        <ul>
-                                            <li><a href="#" class="menuSelect" id="28">N. G.</a></li>
-                                            <li><a href="#" class="menuSelect" id="29">N. G. inverso</a></li>
-                                            <li><a href="#" class="menuSelect" id="30">Multinivel</a></li>
-                                            <li><a href="#" class="menuSelect" id="31">Multinivel inverso</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li><a href="#">Morfología Matemática<i class="fa fa-angle-down"></i></a>
-                                        <ul>
-                                            <li><a href="#">Binaria</a>
-                                                <ul>
-                                                    <li><a href="#" class="menuSelect" id="32">Apertura</a></li>
-                                                    <li><a href="#" class="menuSelect" id="33">Clausura</a></li>
-                                                    <li><a href="#" class="menuSelect" id="34">Cerco convexo interno</a></li>
-                                                    <li><a href="#" class="menuSelect" id="35">Cerco convexo externo</a></li>
-                                                    <li><a href="#" class="menuSelect" id="36">Trans. Hit & Miss</a></li>
-                                                    <li><a href="#" class="menuSelect" id="37">Adelgazamiento</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="#">Latices</a>
-                                                <ul>
-                                                    <li><a href="#" class="menuSelect" id="38">Filtro suavizador</a></li>
-                                                    <li><a href="#" class="menuSelect" id="39">Gradiente morfológica (+)</a></li>
-                                                    <li><a href="#" class="menuSelect" id="40">Gradiente morfológica (-)</a></li>
-                                                    <li><a href="#" class="menuSelect" id="41">Top Mat</a></li>
-                                                    <li><a href="#" class="menuSelect" id="42">Bot Mat</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#" class="menuSelect" id="43">Watershed</a></li>
-									-->
                                     <li><a class="page-scroll" href="#protfolio_sec">Acerca</a></li>
                                     <li><a class="page-scroll" href="#ctn_sec">Contacto</a></li>
                                 </ul>
@@ -435,6 +351,7 @@
 </footer>
 <!-- End footer Section -->
 
+<!-- Pop-pup Section -->
 <div class="my-overlay-container">
 	<div class="my-window-container my-zoomin">
 		<h3>Parámetros</h3> 
@@ -449,9 +366,10 @@
 		<span class="my-close" id="send">Enviar</span>
 	</div>
 </div>
+<!-- End Pop-pup Section -->
+
 
 <script src="js/vendor/jquery-1.11.2.min.js"></script>
-
 <script src="js/isotope.pkgd.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/jquery-ui.js"></script>
@@ -535,6 +453,7 @@
 </script>
 <script src="js/angular.min.js" type="text/javascript"></script>
 <script src="js/data/pageData.js" type="text/javascript"></script>
+<script src="js/charts/loader.js" type="text/javascript"></script>
 <script src="js/fileImage.js" type="text/javascript"></script>
 <script src="js/operations.js" type="text/javascript"></script>
 <script>
@@ -547,7 +466,7 @@ $(document).ready(function(){
     dropZone.addEventListener('dragover', handleDragOver, false);
     dropZone.addEventListener('drop', handleFileSelectDrop, false);
     $('#open').click(open);
-    $('#save').click(save);
+    //$('#save').click(save);
     $('#undo').click(undo);
     $('#redo').click(redo);
     $('.menuSelect').click(editImage);
@@ -562,9 +481,26 @@ $(document).ready(function(){
 		}
 	});
 	
+	//$("#wait").hide();	
+	/*	Loading...	* /
+	$('#wait').bind('ajaxStart', function(){
+		$(this).show();
+	}).bind('ajaxStop', function(){
+		$(this).hide();
+	});
+	/*	Loading...	*/
+	$(document).ajaxStart(function(){
+        $("#wait").css("display", "block");
+    });
+    $(document).ajaxComplete(function(){
+        $("#wait").css("display", "none");
+    });
+	/*	Loading...	*/
+	
 });
 	
 </script>
 
 </body>
 </html>
+

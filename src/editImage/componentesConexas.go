@@ -1,4 +1,4 @@
-package imageEdit
+package editImage
 
 import (
 	//	"fmt"
@@ -15,8 +15,9 @@ func CompConex(inImg image.Image, conect int64) image.Image {
 	ym := binImg.Bounds().Max.Y
 
 	nEtiq := uint32(1)
-	var tiketEq [10000]uint32
-	var newColors [10000]color.Color
+	const MAXTIKETS = 100000
+	var tiketEq [MAXTIKETS]uint32
+	var newColors [MAXTIKETS]color.Color
 
 	// Primera ronda
 	for y := 0; y < ym; y++ {
@@ -60,6 +61,9 @@ func CompConex(inImg image.Image, conect int64) image.Image {
 						//	Nothing.
 						outImg.Set(x, y, color.RGBA64{uint16(nEtiq), uint16(nEtiq), uint16(nEtiq), uint16(a)})
 						nEtiq++
+						if nEtiq%MAXTIKETS == 0 {
+							nEtiq = 1
+						}
 					}
 				} else {
 					ok1, a1 := IsOne(x-1, y-1, ym, xm, binImg) // Left-Up
