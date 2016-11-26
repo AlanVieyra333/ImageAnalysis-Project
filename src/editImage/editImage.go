@@ -101,48 +101,48 @@ func Edit(data InfoJSON, newFile string, folder string) (DataOutJSON, error) {
 			return dataJSON, err
 		}
 		outImg = NG(inImg, uint8(channel))
-	case 12, 13: // Histograma & sus Propiedades
+	case 12: // Histograma & sus Propiedades
 		outImg = NG(inImg, uint8(0))
 		Pr, media, varianza, asimetria, energia, entropia := Histograma(outImg)
 		outImg = inImg
 		dataJSON.Data1 = Pr
 		dataJSON.Data2 = [5]float64{media, varianza, asimetria, energia, entropia}
-	/*case 14: // Desplazamiento
-	case 15: // Ensanchamiento
-	case 16: // Estiramiento
-	case 17: // Ecualización*/
+	/*case 13: // Desplazamiento
+	case 14: // Ensanchamiento
+	case 15: // Estiramiento
+	case 16: // Ecualización*/
 
-	case 18: // Filtro Laplaciano
+	case 17: // Filtro Laplaciano
 		umb, err := strconv.ParseFloat(args[0], 64)
 		if err != nil {
 			return dataJSON, err
 		}
 		outImg = FilterLaplaciano(inImg, uint16(umb*((1<<16)-1)))
-	case 19: // Filtro Robert
+	case 18: // Filtro Robert
 		umb, err := strconv.ParseFloat(args[0], 64)
 		if err != nil {
 			return dataJSON, err
 		}
 		outImg = FilterRobert(inImg, uint16(umb*((1<<16)-1)))
-	case 20: // Filtro Prewitt
+	case 19: // Filtro Prewitt
 		umb, err := strconv.ParseFloat(args[0], 64)
 		if err != nil {
 			return dataJSON, err
 		}
 		outImg = FilterPrewitt(inImg, uint16(umb*((1<<16)-1)))
-	case 21: // Filtro Sobel
+	case 20: // Filtro Sobel
 		umb, err := strconv.ParseFloat(args[0], 64)
 		if err != nil {
 			return dataJSON, err
 		}
 		outImg = FilterSobel(inImg, uint16(umb*((1<<16)-1)))
-	case 22: // Filtro promedio
+	case 21: // Filtro promedio
 		window, err := strconv.ParseInt(args[0], 10, 64)
 		if err != nil {
 			return dataJSON, err
 		}
 		outImg = FilterProm(inImg, int8(window))
-	case 23: // Filtro promedio pesado
+	case 22: // Filtro promedio pesado
 		window, err := strconv.ParseInt(args[0], 10, 64)
 		if err != nil {
 			return dataJSON, err
@@ -152,30 +152,32 @@ func Edit(data InfoJSON, newFile string, folder string) (DataOutJSON, error) {
 			return dataJSON, err
 		}
 		outImg = FilterPromH(inImg, int8(window), uint32(n))
-	case 24: // Filtro Mediana
+	case 23: // Filtro Mediana
 		window, err := strconv.ParseInt(args[0], 10, 64)
 		if err != nil {
 			return dataJSON, err
 		}
 		outImg = FilterMediana(inImg, int8(window))
-	case 25: // Filtro Moda
+	case 24: // Filtro Moda
 		window, err := strconv.ParseInt(args[0], 10, 64)
 		if err != nil {
 			return dataJSON, err
 		}
 		outImg = FilterModa(inImg, int8(window))
-	case 26: // Filtro Max
+	case 25: // Filtro Max
 		window, err := strconv.ParseInt(args[0], 10, 64)
 		if err != nil {
 			return dataJSON, err
 		}
 		outImg = FilterMax(inImg, int8(window))
-	case 27: // Filtro Min
+	case 26: // Filtro Min
 		window, err := strconv.ParseInt(args[0], 10, 64)
 		if err != nil {
 			return dataJSON, err
 		}
 		outImg = FilterMin(inImg, int8(window))
+	case 42:
+		outImg = Watershed(inImg)
 	default:
 		outImg = NG(inImg, uint8(0))
 	}

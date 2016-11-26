@@ -174,22 +174,22 @@ function showPopup(id) {
 	  			"<input type='radio' name='args' value='2'> Verde<br>"+
 				"<input type='radio' name='args' value='3'> Azul<br>";
 			break;
+		case 17:
 		case 18:
 		case 19:
 		case 20:
-		case 21:
 			document.getElementById('label-args').innerHTML = "Umbral: [0,1]";
 			document.getElementById('param').innerHTML = "<input type='range' name='args' min='0' max='1' step='0.01' value='0.5' id='args'>";
 			break;
-		case 22:
+		case 21:
+		case 23:
 		case 24:
 		case 25:
 		case 26:
-		case 27:
 			document.getElementById('label-args').innerHTML = "Tamaño de ventana (nxn): {n | impar >= 3}";
 			document.getElementById('param').innerHTML = "<input type='number' name='args' min='3' value='3' step='2' required id='args'>";
 			break;
-		case 23:
+		case 22:
 			document.getElementById('label-args').innerHTML = "Tamaño de ventana(nxn) y peso(N): {n | impar >= 3}, N>1";
 			$('#param').html("<input type='number' name='args' min='3' value='3' step='2' required id='args'>");
 			$('#param').append("<input type='number' name='args2' min='2' value='2' required id='args2'>");

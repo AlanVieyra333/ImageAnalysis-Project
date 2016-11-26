@@ -63,7 +63,7 @@ function editImage() {
 	}
 	closePopup();
 
-	if(  this.id != "send" && ((ID >= 1 && ID<= 2) || (ID >= 9 && ID<= 10) || (ID >= 18 && ID<= 27) ) ){ // Get value.
+	if(  this.id != "send" && ((ID >= 1 && ID<= 2) || (ID >= 9 && ID<= 10) || (ID >= 17 && ID<= 26) ) ){ // Get value.
 		showPopup(ID);
 	}else if(ID >= 5 && ID <= 8 ){ // Get other image.
 		$('#imageMask').attr('valueOp',ID);
@@ -81,7 +81,7 @@ function editImage() {
 				infoJSON.Args = "" + $( "#args" ).val() + ";" + $('input:radio[name=args2]:checked').val() + ";";
 			}else if(ID == 10){
 				infoJSON.Args = "" + $('input:radio[name=args]:checked').val() + ";";
-			}else if(ID == 23){
+			}else if(ID == 22){
 				infoJSON.Args = "" + $( "#args" ).val() + ";" + + $( "#args2" ).val() + ";";
 			}else{
 				infoJSON.Args = "" + $( "#args" ).val() + ";";

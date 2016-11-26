@@ -23,8 +23,7 @@ myApp.controller('OptionsController', ['$scope', function($scope) {
 							]},
 		{name:"Sección 2", items:[
 								{name:"Mejora del contraste", items:""},
-								{name:"Histograma", items:""},
-								{name:"Propiedades del Histograma", items:""},
+								{name:"Histograma y sus prop.", items:""},
 								{name:"Desplazamiento", items:""},
 								{name:"Ensanchamiento", items:""},
 								{name:"Estiramiento", items:""},
@@ -65,8 +64,8 @@ myApp.controller('OptionsController', ['$scope', function($scope) {
 														{name:"Filtro suavizador", items:""},
 														{name:"Gradiente morfológica (+)", items:""},
 														{name:"Gradiente morfológica (-)", items:""},
-														{name:"Top Mat", items:""},
-														{name:"Bot Mat", items:""}
+														{name:"Top Hat", items:""},
+														{name:"Bot Hat", items:""}
 														]}
 							]},
 		{name:"Watershed", items:""}
