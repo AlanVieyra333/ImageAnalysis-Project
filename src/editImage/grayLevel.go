@@ -38,8 +38,8 @@ func GetGrayWeighted(R uint32, G uint32, B uint32) uint32 {
 	var result uint32
 	result = 0
 	result += uint32(float64(R) * 0.3)
-	result += uint32(float64(R) * 0.59)
-	result += uint32(float64(R) * 0.11)
+	result += uint32(float64(G) * 0.59)
+	result += uint32(float64(B) * 0.11)
 
 	return result
 }

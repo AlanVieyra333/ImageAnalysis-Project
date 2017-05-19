@@ -15,6 +15,7 @@ function uploadFileAjax(file, func, myType) {
         contentType: contentType,
         data: data,
         processData: processData,
+		async: true,
         cache: cache
     }).done(
         function (res) {
@@ -29,7 +30,9 @@ function uploadFileAjax(file, func, myType) {
 
 function uploadFiles(files, func1, func2, myType) {
     // Loop through the FileList and render image files as thumbnails.
-    for (var i = 0, f; f = files[i]; i++) {
+    //alert(files.length);
+	for (var i = 0; i<files.length; i++) {
+		var f = files[i];
         // Only process image files.
         if (!f.type.match('image.*')) {
             alert("Solo se permiten imagenes.");
@@ -97,25 +100,35 @@ function operationImages(res){
 				j=i;
 		}
 		fileNameEdit = fileNameEdit.substring(j+1);
-		
+		//alert(res.FileName + " " + res.FileNameEdit);
         var infoJSON = {
 			Operation:  ID,
 			FileName:   fileName,
 			FileNameEdit: fileNameEdit,
 			Args: "" +  res.FileName + ";"+ res.FileNameEdit + ";"
 		};
+		
+		if( (ID >= 31 && ID <= 32) || (ID >= 35 && ID <= 41) ) {
+			infoJSON.Args += $( "#args" ).val() + ";";
+		}
 				
 		var data = JSON.stringify(infoJSON);
 		var ok = function(res){
 			$('#imageEdit').removeAttr('src');
 			$('#imageEdit').attr('src','uploaded/'+ IDClient+'/' + res.FileNameEdit);
 			$('#imageEdit').show();
+			
+			$('#save').removeAttr('href');
+			$('#save').attr('href','uploaded/'+ IDClient + "/" + res.FileNameEdit);
+			$('#save').removeAttr('download');
+			$('#save').attr('download', res.FileName);
+			$('#save').show();
 		};
 
-		sendAjaxJSON(data, ok, true);
+		sendAjaxJSON(data, ok, false);
 		
-		document.getElementById('imageMaskSelect').innerHTML = ['<input type="file" id="imageMask" name="files[]"/>'].join('');
-        document.getElementById('imageMask').addEventListener('change', handleFileSelect, false);
+		document.getElementById('imageMaskSelect').innerHTML = ['<input type="file" id="imageMask" name="files[] valueOp=0"/>'].join('');
+		document.getElementById('imageMask').addEventListener('change', handleFileSelect, false);
     }else{
         alert(res.Message);
     }
@@ -123,6 +136,7 @@ function operationImages(res){
 
 // --------------------
 function handleFileSelect(evt) {
+	//alert("is:" + this.id);
     var files = evt.target.files; // FileList object
 	if(this.id == "files"){
 		/*	----------------	Delete all data (0)	-----------------	*/		
@@ -137,7 +151,8 @@ function handleFileSelectDrop(evt) {
     evt.preventDefault();
 
     var files = evt.dataTransfer.files; // FileList object.
-    uploadFiles(files);
+	
+	uploadFiles(files, uploadFileAjax, showNewImage, "0");
 }
 
 function handleDragOver(evt) {
@@ -174,6 +189,16 @@ function showPopup(id) {
 	  			"<input type='radio' name='args' value='2'> Verde<br>"+
 				"<input type='radio' name='args' value='3'> Azul<br>";
 			break;
+		case 13:
+			document.getElementById('label-args').innerHTML = "Valor de desplazamiento: [-255,255]";
+			$('#param').html("<input type='number' name='args' min='-255' max='255' value='0' step='1' required id='args'>");
+			break;
+		case 14:
+		case 15:
+			document.getElementById('label-args').innerHTML = "Maximo y minimo valor deseado: [0,255]";
+			$('#param').html("<input type='number' name='args' min='0' max='255' value='0' step='1' required id='args'>");
+			$('#param').append("<input type='number' name='args2' min='0' max='255' value='255' step='1' required id='args2'>");
+			break;
 		case 17:
 		case 18:
 		case 19:
@@ -193,6 +218,17 @@ function showPopup(id) {
 			document.getElementById('label-args').innerHTML = "Tamaño de ventana(nxn) y peso(N): {n | impar >= 3}, N>1";
 			$('#param').html("<input type='number' name='args' min='3' value='3' step='2' required id='args'>");
 			$('#param').append("<input type='number' name='args2' min='2' value='2' required id='args2'>");
+			break;
+		case 31:
+		case 32:
+		case 35:
+		case 37:
+		case 38:
+		case 39:
+		case 40:
+		case 41:
+			document.getElementById('label-args').innerHTML = "Ingrese las coordenadas del origen del EE: {x,y) | x,y >= 0<br>(A continuacion seleccione la imagen que usara como EE)";
+			$('#param').html("(X,Y)=<input type='text' name='args' value='0,0' pattern='^[\\d]+[,][\\d]+$' required id='args'>");
 			break;
 		default:
 			document.getElementById('label-args').innerHTML = "ID invalido";
@@ -243,6 +279,9 @@ function getInfoJSON(){
 }
 
 function undo() {
+	$(".info").css("display", "none");
+	$("#chart_div").css("display", "none");
+	
 	var infoJSON = getInfoJSON();
 	infoJSON.Operation = -1;
 	infoJSON.Args = "1";
@@ -268,6 +307,9 @@ function undo() {
 }
 
 function redo() {
+	$(".info").css("display", "none");
+	$("#chart_div").css("display", "none");
+	
     var infoJSON = getInfoJSON();
 	infoJSON.Operation = -1;
 	infoJSON.Args = "2";

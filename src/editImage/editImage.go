@@ -64,7 +64,7 @@ func Edit(data InfoJSON, newFile string, folder string) (DataOutJSON, error) {
 	case 4:
 		outImg = Negative(inImg)
 	case 5, 6, 7, 8:
-		tmpFile, err := os.Open(folder + args[0])
+		tmpFile, err := os.Open(folder + args[1])
 		if err != nil {
 			return dataJSON, err
 		}
@@ -103,15 +103,36 @@ func Edit(data InfoJSON, newFile string, folder string) (DataOutJSON, error) {
 		outImg = NG(inImg, uint8(channel))
 	case 12: // Histograma & sus Propiedades
 		outImg = NG(inImg, uint8(0))
-		Pr, media, varianza, asimetria, energia, entropia := Histograma(outImg)
+		var Pr [0xff]float64
+		var media, varianza, asimetria, energia, entropia float64
+
+		Pr, media, varianza, asimetria, energia, entropia = Histograma(outImg)
+
 		outImg = inImg
 		dataJSON.Data1 = Pr
 		dataJSON.Data2 = [5]float64{media, varianza, asimetria, energia, entropia}
-	/*case 13: // Desplazamiento
-	case 14: // Ensanchamiento
-	case 15: // Estiramiento
+	case 13: // Desplazamiento
+		valDes, err := strconv.ParseInt(args[0], 10, 64)
+		if err != nil {
+			return dataJSON, err
+		}
+		outImg = Displacement(inImg, int((valDes*0xffff)/255))
+	case 14, 15: // Ensanchamiento/Contraccion || Estiramiento/Expancion
+		valMin, err := strconv.ParseInt(args[0], 10, 64)
+		if err != nil {
+			return dataJSON, err
+		}
+		valMax, err := strconv.ParseInt(args[1], 10, 64)
+		if err != nil {
+			return dataJSON, err
+		}
+		if data.Operation == 14 {
+			outImg = Contraction(inImg, uint32((valMax*0xffff)/255), uint32((valMin*0xffff)/255))
+		} else if data.Operation == 15 {
+			outImg = Expansion(inImg, uint32((valMax*0xffff)/255), uint32((valMin*0xffff)/255))
+		}
 	case 16: // Ecualización*/
-
+		outImg = Ecualization(inImg)
 	case 17: // Filtro Laplaciano
 		umb, err := strconv.ParseFloat(args[0], 64)
 		if err != nil {
@@ -176,6 +197,40 @@ func Edit(data InfoJSON, newFile string, folder string) (DataOutJSON, error) {
 			return dataJSON, err
 		}
 		outImg = FilterMin(inImg, int8(window))
+	case 31, 32, 35, 37, 38, 39, 40, 41:
+		tmpFile, err := os.Open(folder + args[1])
+		if err != nil {
+			return dataJSON, err
+		}
+		defer tmpFile.Close()
+
+		tmpImg, _, err := image.Decode(tmpFile)
+		if err != nil {
+			return dataJSON, err
+		}
+
+		originStr := strings.Split(args[2], ",")
+		xO, _ := strconv.ParseInt(originStr[0], 10, 32)
+		yO, _ := strconv.ParseInt(originStr[1], 10, 32)
+		origin := [2]int{int(xO), int(yO)}
+
+		if data.Operation == 31 {
+			outImg = Opening(inImg, tmpImg, origin)
+		} else if data.Operation == 32 {
+			outImg = Closing(inImg, tmpImg, origin)
+		} else if data.Operation == 35 {
+			outImg = HMT(inImg, tmpImg, origin)
+		} else if data.Operation == 37 {
+			outImg = MorphSmoothing(inImg, tmpImg, origin)
+		} else if data.Operation == 38 {
+			outImg = DilatationGradient(inImg, tmpImg, origin)
+		} else if data.Operation == 39 {
+			outImg = ErosionGradient(inImg, tmpImg, origin)
+		} else if data.Operation == 40 {
+			outImg = TopHat(inImg, tmpImg, origin)
+		} else if data.Operation == 41 {
+			outImg = BotHat(inImg, tmpImg, origin)
+		}
 	case 42:
 		outImg = Watershed(inImg)
 	default:

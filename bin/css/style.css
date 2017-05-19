@@ -1118,7 +1118,8 @@ input[type=text], select {
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
-    border: 1px solid #ccc;
+    /*border: 1px solid #ccc;*/
+	border: 2px solid;
     border-radius: 4px;
     box-sizing: border-box;
 }
@@ -1128,7 +1129,8 @@ input[type=number], select {
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
-    border: 1px solid #ccc;
+    /*border: 1px solid #ccc;*/
+	border: 2px solid;
     border-radius: 4px;
     box-sizing: border-box;
 }
@@ -1172,7 +1174,7 @@ input:valid {
 	border-radius: 10px;
 	border: 2px solid #000;
 	margin: -490px auto 10px auto;
-	width: 1170px;
+	width: 970px;
 	opacity: 0.95;
 }
 

@@ -54,7 +54,7 @@
 		<!-- img src='./img/wait.gif' width="150" height="150"  /-->		
 	</div>
 	<div class="logo">
-		Caragando
+		Cargando
 	</div>	
 </div>
 
@@ -149,6 +149,8 @@
                                 </div>
                                 <div class="fileSelectHidden" id="fileSelect"></div>
 								<div class="fileSelectHidden" id="imageMaskSelect"> <input type="file" id="imageMask" name="files[]" valueOp=0/></div>
+								<div class="fileSelectHidden" id="imageEESelect"> <input type="file" id="imageEE" name="files[]" valueOp=0 multiple/></div>
+								
                             </div>
                         </div>
                     </div>
@@ -185,7 +187,7 @@
                     <ul class="filter">
                         <li class="active" data-filter="*">Todo</li>
                         <li data-filter=".filter">Filtros</li>
-                        <li data-filter=".segmentation">Segmentación</li>
+                        <li data-filter=".label">Etiquetado</li>
                         <li data-filter=".morphology">Morfología matemática</li>
                         <li data-filter=".watershed">Transformada Watershed</li>
                     </ul>
@@ -194,25 +196,53 @@
                 <div class="all-portfolios">
                     <div class="col-sm-12  col-lg-12 col-md-12 col-xs-12 ">
                         <div class="single-portfolio filter">
-                            <img class="img-responsive" src="./img/sample/filter1.jpg"
+                            <img class="img-responsive" src="./img/sample/filter1.png"
+                                 alt="">
+                        </div>
+						<div class="single-portfolio filter">
+                            <img class="img-responsive" src="./img/sample/filter2.png"
+                                 alt="">
+                        </div>
+						<div class="single-portfolio filter">
+                            <img class="img-responsive" src="./img/sample/filter3.jpg"
+                                 alt="">
+                        </div>
+						<div class="single-portfolio filter">
+                            <img class="img-responsive" src="./img/sample/filter4.jpg"
                                  alt="">
                         </div>
                     </div>
                     <div class="col-sm-12  col-lg-12 col-md-12 col-xs-12 ">
-                        <div class="single-portfolio segmentation">
-                            <img class="img-responsive" src="./img/sample/segmentation1.jpg"
-                                 alt="">
+                        <div class="single-portfolio label">
+                            <img class="img-responsive" src="./img/sample/label1.jpg"
+                                 alt="">							
+                        </div>
+						<div class="single-portfolio label">
+                            <img class="img-responsive" src="./img/sample/label2.jpg"
+                                 alt="">							
                         </div>
                     </div>
                     <div class="col-sm-12  col-lg-12 col-md-12 col-xs-12 ">
                         <div class="single-portfolio morphology">
-                            <img class="img-responsive" src="./img/sample/morphology1.jpg"
+                            <img class="img-responsive" src="./img/sample/morphology1.png"
+                                 alt="">
+                        </div>
+						<div class="single-portfolio morphology">
+                            <img class="img-responsive" src="./img/sample/maskCir24x24.png"
+                                 alt="">
+                        </div>
+						<div class="single-portfolio morphology">
+                            <img class="img-responsive" src="./img/sample/morphology2.png"
                                  alt="">
                         </div>
                     </div>
                     <div class="col-sm-12  col-lg-12 col-md-12 col-xs-12 ">
                         <div class="single-portfolio watershed">
-                            <img class="img-responsive" src="./img/sample/watershed1.png"
+                            <img class="img-responsive" src="./img/sample/watershed1.jpg"
+                                 alt="">
+                        </div>
+						<div class="single-portfolio watershed">
+                            <img class="img-responsive" src="./img/sample/watershed2.png"
                                  alt="">
                         </div>
                     </div>                    
@@ -234,18 +264,18 @@
                 <div class="title_sec">
                     <h1>Contacto</h1>
 
-                    <h2>Alan Vieyra</h2>
+                    <h2>Alan Fernando Rincón Vieyra</h2>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="cnt_info">
                     <ul>
-                        <li><i class="fa fa-facebook"></i>
+                        <li><i class="fa "></i>
 
-                            <p>Instituto Politécnico Nacional - Escuela Superior de Cómputo</p></li>
+                            <p>Escuela Superior de Cómputo - Instituto Politécnico Nacional</p></li>
                         <li><i class="fa fa-envelope"></i>
 
-                            <p>Ing.A.Vieyra@gmail.com</p></li>
+                            <p>AlanVieyra376@gmail.com</p></li>
                         <li><i class="fa fa-phone"></i>
 
                             <p>5540623689 (+52)</p></li>
@@ -294,6 +324,7 @@
                 <ul class="copy_right">
                     <li>&copy;IPN - ESCOM - 2016</li>
                     <li>By Alan Fernando Rincón Vieyra</li>
+					<li>Unidad de aprendizaje: Analisis de Imágenes</li>
                     <li>3CM7</li>
                     <li>Profesor: María Elena Cruz Meza</li>
                 </ul>
@@ -336,7 +367,7 @@
 <script src="js/plugins.js"></script>
 
 <!-- Google Map js -->
-<script src="https://maps.googleapis.com/maps/api/js"></script>
+<script src="js/maps.js"></script>
 <script>
     function initialize() {
         var mapOptions = {
@@ -405,7 +436,8 @@
 </script>
 <script src="js/angular.min.js" type="text/javascript"></script>
 <script src="js/data/pageData.js" type="text/javascript"></script>
-<script src="js/charts/loader.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/charts/highcharts.js"></script>
+<script type="text/javascript" src="js/charts/exporting.js"></script>
 <script src="js/fileImage.js" type="text/javascript"></script>
 <script src="js/operations.js" type="text/javascript"></script>
 <script>
@@ -413,10 +445,8 @@ $(document).ready(function(){
     
     document.getElementById('files').addEventListener('change', handleFileSelect, false);
 	document.getElementById('imageMask').addEventListener('change', handleFileSelect, false);
+	document.getElementById('imageEE').addEventListener('change', handleFileSelect, false);
 	
-    var dropZone = document.getElementById('anImage');
-    dropZone.addEventListener('dragover', handleDragOver, false);
-    dropZone.addEventListener('drop', handleFileSelectDrop, false);
     $('#open').click(open);
     //$('#save').click(save);
     $('#undo').click(undo);
@@ -433,6 +463,10 @@ $(document).ready(function(){
 		}
 	});
 	
+	var dropZone = document.getElementById('anImage');
+    dropZone.addEventListener('dragover', handleDragOver, false);
+    dropZone.addEventListener('drop', handleFileSelectDrop, false);
+	
 	//$("#wait").hide();	
 	/*	Loading...	* /
 	$('#wait').bind('ajaxStart', function(){
@@ -448,7 +482,7 @@ $(document).ready(function(){
         $("#wait").css("display", "none");
     });
 	/*	Loading...	*/
-	
+	var chart;
 });
 	
 </script>

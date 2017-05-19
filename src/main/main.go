@@ -1,5 +1,6 @@
 /**
  * Created by Fenix on 03/10/2016.
+set GOROOT=C:\Program Files\Go
 set GOPATH=%cd%
 go build editImage
 go install server
@@ -90,7 +91,7 @@ func newID() string {
 	for exist, _ := exists("./uploaded/" + id + "/"); exist; exist, _ = exists("./uploaded/" + id) {
 		id = tools.GetRandInteger(10)
 	}
-	os.Mkdir("./uploaded/"+id+"/", 0777)
+	os.Mkdir("./uploaded/"+id+"/", 0600)
 	return id
 }
 
@@ -174,9 +175,23 @@ func uploadHandler(w http.ResponseWriter, req *http.Request) {
 		value = confirm.FileNameEdit
 		cookie = http.Cookie{Name: name, Value: value, Path: "/", HttpOnly: true}
 		http.SetCookie(w, &cookie)
-	}
+	} /* else {
+		cookieOp, err := req.Cookie("op1")
+		if err != nil {
+			http.Redirect(w, req, "/", http.StatusFound)
+			return
+		}
+		vals := strings.Split(cookieOp.Value, ",")
+		actualFile := vals[len(vals)-1]
+		numFile := 1
+		for exist, _ := exists("./uploaded/" + id + "/" + actualFile + strconv.Itoa(numFile) ); exist; exist, _ = exists("./uploaded/" + id + actualFile) {
+			numFile++
+		}
+
+		confirm.FileNameEdit = actualFile + numFile
+	}*/
 	/*	--------------------	Create folder and files	--------------------	*/
-	err = ioutil.WriteFile("./uploaded/"+ID+"/"+confirm.FileNameEdit, data, 0777)
+	err = ioutil.WriteFile("./uploaded/"+ID+"/"+confirm.FileNameEdit, data, 0600)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		confirm.Code = 2

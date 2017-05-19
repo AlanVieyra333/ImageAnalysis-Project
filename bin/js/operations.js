@@ -63,15 +63,15 @@ function editImage() {
 	}
 	closePopup();
 
-	if(  this.id != "send" && ((ID >= 1 && ID<= 2) || (ID >= 9 && ID<= 10) || (ID >= 17 && ID<= 26) ) ){ // Get value.
+	if(  this.id != "send" && ((ID >= 1 && ID<= 2) || (ID >= 9 && ID<= 10) || (ID >= 13 && ID<= 15) || (ID >= 17 && ID<= 26) || (ID >= 31 && ID<= 32) || (ID >= 35 && ID<= 41)  ) ){ // Get value.
 		showPopup(ID);
-	}else if(ID >= 5 && ID <= 8 ){ // Get other image.
+	}else if( (ID >= 5 && ID <= 8) || (ID >= 31 && ID<= 32) || (ID >= 35 && ID<= 41) ) { // Get other image.		
 		$('#imageMask').attr('valueOp',ID);
 		$('#imageMask').removeAttr('value');
 		$('#imageMask').attr('value','');
 		$('#imageMask').show();
 		document.getElementById('imageMask').click();
-	}else{		
+	}else{
 		/*	----------------	Send data	-----------------	*/		
 		var infoJSON = getInfoJSON();
 		infoJSON.Operation = ID;
@@ -81,7 +81,7 @@ function editImage() {
 				infoJSON.Args = "" + $( "#args" ).val() + ";" + $('input:radio[name=args2]:checked').val() + ";";
 			}else if(ID == 10){
 				infoJSON.Args = "" + $('input:radio[name=args]:checked').val() + ";";
-			}else if(ID == 22){
+			}else if(ID == 22 || (ID >= 14 && ID <= 15)){
 				infoJSON.Args = "" + $( "#args" ).val() + ";" + + $( "#args2" ).val() + ";";
 			}else{
 				infoJSON.Args = "" + $( "#args" ).val() + ";";
@@ -108,6 +108,13 @@ function editImage() {
 			//alert("Data: " + res.Data.Data1[0]);
 			for (var k=0; k< 255; k++){
 				if(res.Data.Data1[k] != 0.0){
+					P = res.Data.Data1;	
+					// Crear grafico.
+					//$('#chart_div').css("display", "block");
+					drawChart();						
+					$('#chart_div').css("display", "block");
+					
+					
 					$('#histInfo').html("<h1>Propiedades</h1>"+
 					"<br>Media: "+"<br>"+res.Data.Data2[0]+
 					"<br>Varianza: "+"<br>"+res.Data.Data2[1]+
@@ -116,10 +123,6 @@ function editImage() {
 					"<br>Entropia:"+"<br>"+res.Data.Data2[4]);
 					$('.info').css("display", "block");
 					
-					P = res.Data.Data1;
-					$('#chart_div').css("display", "block");
-					google.charts.load('current', {'packages':['corechart']});
-					google.charts.setOnLoadCallback(drawChart);	
 					break;
 				}
 			}		
@@ -129,23 +132,54 @@ function editImage() {
 	}
 }
 
-function drawChart() {
-	var data = google.visualization.arrayToDataTable([
-	  ['Nivel de gris', 'Imagen'],
-	  [0,  0.0]
-	]);	
-	//alert(P);
-	for(var k=0; k<P.length; k++){
-		data.addRow( [k, P[k]*100] );
-	}	
+function drawChart() {	
+	chart = new Highcharts.Chart({
+		chart: {
+			renderTo: 'chart_div', 	// Asignar div donde se mostrara
+			defaultSeriesType: 'line'	// Pongo que tipo de gráfica es
+		},
+		title: {
+			text: 'Histograma'	// Titulo (Opcional)
+		},
+		subtitle: {
+			text: 'Imagen en niveles de gris'				// Subtitulo (Opcional)
+		},
+		// Pongo los datos en el eje de las 'X'
+		xAxis: {
+			//categories: ['Feb12','Mar12','Abr12','May12','Jun12','Jul12','Ago12','Sep12','Oct12','Nov12','Dic12','Ene13','Feb13','Mar13','Abr13','May13','Jun13'],
+			// Pongo el título para el eje de las 'X'
+			title: {
+				text: 'Nivel de gris'
+			}
+		},
+		yAxis: {
+			// Pongo el título para el eje de las 'Y'
+			title: {
+				text: 'Frecuencia (%)'
+			}
+		},
+		// Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+		tooltip: {
+			enabled: true,
+			formatter: function() {
+				return '<b>'+ this.series.name +'</b><br/>'+
+					this.x +': '+ this.y +' '+this.series.name;
+			}
+		},
+		// Doy opciones a la gráfica
+		plotOptions: {
+			line: {
+				dataLabels: {
+					enabled: false
+				},
+				enableMouseTracking: true
+			}
+		},
+		// Doy los datos de la gráfica para dibujarlas
+		series: [{
+            name: 'Imagen',
+            data: P
+        }],
+	});
 	
-	var options = {
-		title: 'Histograma',
-		hAxis: {title: 'Nivel de gris',  titleTextStyle: {color: '#333'}},
-		vAxis: {title: 'Frecuencia (%)', titleTextStyle: {color: '#333'}, minValue: 0}
-		//legend: {position: 'none'}
-	};
-	
-	var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-	chart.draw(data, options);
 }

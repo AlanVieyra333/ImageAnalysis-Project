@@ -160,3 +160,39 @@ func Or(inImg image.Image, mask image.Image) image.Image {
 
 	return outImg
 }
+
+func Intersection(aImg image.Image, bImg image.Image) image.Image {
+	n := aImg.Bounds().Max.Y
+	m := aImg.Bounds().Max.X
+	nB := bImg.Bounds().Max.Y
+	mB := bImg.Bounds().Max.X
+	outImg := image.NewRGBA(image.Rect(0, 0, m, n))
+
+	//	Recorrer toda la imagen.
+	for y := 0; y < n; y++ {
+		for x := 0; x < m; x++ {
+			var r, g, b, a uint32
+
+			if IsValid(x, y, nB, mB) {
+				r, g, b, a = aImg.At(x, y).RGBA()
+				rB, gB, bB, _ := aImg.At(x, y).RGBA()
+				if r != rB && g != gB && b != bB {
+					r = 0
+					g = 0
+					b = 0
+				}
+
+			} else {
+				r = 0
+				g = 0
+				b = 0
+				a = 0
+			}
+
+			newColor := color.RGBA64{uint16(r), uint16(g), uint16(b), uint16(a)}
+			outImg.Set(x, y, newColor)
+		}
+	}
+
+	return outImg
+}
