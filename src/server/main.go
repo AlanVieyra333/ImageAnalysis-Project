@@ -6,7 +6,7 @@ go build editImage
 go install server
 */
 
-package main
+package server
 
 import (
 	"editImage"
@@ -19,7 +19,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"server"
+	//"server"
 	"strconv"
 	"strings"
 	"tools"
@@ -267,12 +267,12 @@ func jsonHandler(w http.ResponseWriter, req *http.Request) {
 
 					switch aux {
 					case 1: //	Undo.
-						if server.Undo(w, req) {
+						if Undo(w, req) {
 							op--
 							confirm.FileNameEdit = paths[int(op-1)]
 						}
 					case 2: //	Redo.
-						if server.Redo(w, req) {
+						if Redo(w, req) {
 							op++
 							confirm.FileNameEdit = paths[int(op-1)]
 						}
@@ -296,7 +296,7 @@ func jsonHandler(w http.ResponseWriter, req *http.Request) {
 					confirm.FileNameEdit = newFile
 					confirm.Data = dataJSON
 
-					server.SendCookie(w, req, newFile)
+					SendCookie(w, req, newFile)
 				}
 			}
 		}
