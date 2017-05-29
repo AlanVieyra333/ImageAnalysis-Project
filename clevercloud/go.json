@@ -1,7 +1,7 @@
 {
     "deploy": {
         "appIsGoPath": true,
-        "main": "main",
+        "main": "server",
 		"execDir": "bin"
     }
 }
