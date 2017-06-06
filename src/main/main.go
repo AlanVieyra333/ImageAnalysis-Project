@@ -316,7 +316,7 @@ func jsonHandler(w http.ResponseWriter, req *http.Request) {
 /*	--------------------------->	Main	--------------------------->	*/
 func main() {
 	//fmt.Println(os.Getwd())
-	tools.RemovePath("./uploaded")
+	//tools.RemovePath("./uploaded")
 
 	http.HandleFunc("/", makeHandler(homeHandler))
 	http.HandleFunc("/upload/", makeHandler(uploadHandler))
